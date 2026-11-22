@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rune Clips Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: one phone-width app column, four tabs on a bottom bar. Single dark world. */
+:root{
+  --ink:#0c0e13;--panel:#151922;--panel2:#1b2030;--line:#252b3b;
+  --red:#ff3b47;--mint:#33dca0;--amber:#ffb547;
+  --tx:#f3f5f9;--mut:#8f98ad;
+  --display:"Sora",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--ink);color:var(--tx);font:500 15px/1.45 var(--body)}
+body{min-height:100%}
+#app{max-width:520px;margin:0 auto;padding:max(18px,env(safe-area-inset-top)) 16px 120px}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.logo{width:30px;height:30px;border-radius:9px;margin-right:10px;vertical-align:middle;flex:none}
+.brandrow{display:flex;align-items:center}
+.brand{font:700 13px var(--display);letter-spacing:.04em;color:var(--mut);text-transform:uppercase}
+.date{color:var(--mut);font-size:13px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px;margin-bottom:14px}
+.hero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:22px 18px}
+.ring{position:relative;width:176px;height:176px}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring .n{font:800 52px/1 var(--display);font-variant-numeric:tabular-nums}
+.ring .l{color:var(--mut);font-size:12px;margin-top:4px}
+.msg{margin:14px 0 4px;font:700 18px var(--display)}
+.msg2{color:var(--mut);font-size:13px;margin:0 0 16px}
+.btn{width:100%;border:0;border-radius:16px;padding:16px;font:700 16px var(--display);color:#fff;background:var(--red);cursor:pointer;transition:transform .08s}
+.btn:active{transform:scale(.98)}
+.btn.ok{background:rgba(51,220,160,.14);color:var(--mint);border:1px solid rgba(51,220,160,.5)}
+.btn.ghost{background:var(--panel2);color:var(--tx);font-weight:600;font-size:14px;padding:12px}
+.btn.sm{width:auto;padding:8px 14px;font-size:13px;border-radius:12px}
+.btn:disabled{opacity:.55;cursor:default}
+.link{background:none;border:0;color:var(--mut);font:600 13px var(--body);padding:10px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.links{display:flex;gap:6px;justify-content:center}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.dot{aspect-ratio:1;border-radius:50%;background:var(--panel2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font:700 13px var(--display);color:var(--mut);cursor:pointer}
+.dot.done{background:rgba(51,220,160,.16);border-color:var(--mint);color:var(--mint)}
+.dot.x{background:rgba(255,59,71,.14);border-color:var(--red);color:var(--red)}
+.dot.rest{background:rgba(143,152,173,.14);border-color:var(--mut);color:var(--tx)}
+.dot.today{box-shadow:0 0 0 2px var(--ink),0 0 0 3.5px var(--tx)}
+.dl{text-align:center;color:var(--mut);font-size:11px;margin-top:5px}
+.sec{font:700 12px var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin:0 0 12px}
+.stepper{display:flex;gap:5px;margin:10px 0}
+.stepper i{flex:1;height:6px;border-radius:4px;background:var(--panel2)}
+.stepper i.on{background:var(--red)}
+.stepper.big i{height:8px}
+.row{display:flex;gap:10px;align-items:center}
+.grow{flex:1;min-width:0}
+.t{font:600 15px/1.3 var(--display);overflow-wrap:anywhere}
+.t.btnlike{cursor:pointer}
+.m{color:var(--mut);font-size:12.5px}
+.chip{display:inline-block;padding:5px 11px;border-radius:99px;background:var(--panel2);border:1px solid var(--line);font-size:12.5px;margin:0 6px 6px 0}
+.chip.red{background:rgba(255,59,71,.12);border-color:rgba(255,59,71,.4);color:#ff9097}
+.chip.ok{background:rgba(51,220,160,.12);border-color:rgba(51,220,160,.45);color:var(--mint)}
+.chip.warn{background:rgba(255,181,71,.12);border-color:rgba(255,181,71,.45);color:var(--amber)}
+textarea,input[type=text],input[type=number],select{width:100%;font:500 15px var(--body);color:var(--tx);background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:13px 14px;outline:none}
+textarea:focus,input:focus,select:focus{border-color:var(--red)}
+textarea{resize:vertical;min-height:84px}
+textarea.tall{min-height:190px}
+label.f{display:block;color:var(--mut);font-size:12px;margin:14px 0 6px}
+.steps{display:flex;flex-direction:column;gap:9px}
+.st{display:flex;gap:10px;align-items:center;font-size:14px}
+.st .b{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);flex:none}
+.st.run .b{border-color:var(--red);border-top-color:transparent;animation:sp .8s linear infinite}
+.st.ok .b{background:var(--mint);border-color:var(--mint)}
+.st.fail .b{background:var(--amber);border-color:var(--amber)}
+.st.fail,.st.skip{color:var(--mut)}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.st.run .b{animation:none}.btn{transition:none}}
+.title-row{display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-top:1px solid var(--line)}
+.title-row:first-of-type{border-top:0}
+.score{flex:none;width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font:800 17px var(--display);background:var(--panel2);color:var(--mut);font-variant-numeric:tabular-nums}
+.score.hi{background:rgba(51,220,160,.15);color:var(--mint)}
+.score.mid{background:rgba(255,181,71,.15);color:var(--amber)}
+.best{display:inline-block;font:700 10px var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--mint);margin-bottom:3px}
+.acts{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}
+ul.ins{margin:0;padding-left:18px}
+ul.ins li{margin-bottom:8px}
+.box{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px}
+.tile b{display:block;font:800 30px/1.1 var(--display);font-variant-numeric:tabular-nums}
+.tile span{color:var(--mut);font-size:12.5px}
+.bars{display:flex;gap:8px;align-items:flex-end;height:110px}
+.bars div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px;font-size:11px;color:var(--mut)}
+.bars i{display:block;width:100%;background:var(--red);border-radius:6px 6px 3px 3px;min-height:3px}
+.prog{height:10px;background:var(--panel2);border-radius:99px;overflow:hidden;margin:6px 0 4px}
+.prog i{display:block;height:100%;background:var(--red);border-radius:99px}
+.prog.full i{background:var(--mint)}
+.chk{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--line);cursor:pointer;font-size:14px}
+.chk:first-of-type{border-top:0}
+.chk input{width:20px;height:20px;accent-color:var(--mint);margin:1px 0 0;flex:none}
+.crow{display:grid;grid-template-columns:1fr;gap:8px;padding:12px 0;border-top:1px solid var(--line)}
+.crow:first-of-type{border-top:0}
+.crow .l2{display:flex;gap:10px;align-items:center}
+.crow .l2 input[type=checkbox]{width:20px;height:20px;accent-color:var(--mint);flex:none}
+.back{background:none;border:0;color:var(--mut);font:600 14px var(--body);padding:0;margin-bottom:14px;cursor:pointer}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tabbar{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;background:linear-gradient(to top,var(--ink) 70%,transparent);padding:10px 12px max(12px,env(safe-area-inset-bottom))}
+.tabs{display:flex;width:100%;max-width:496px;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:6px}
+.tab{flex:1;border:0;background:none;color:var(--mut);font:600 10.5px var(--body);display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0;border-radius:16px;cursor:pointer}
+.tab svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.tab.on{background:var(--panel2);color:var(--tx)}
+.tab.on svg{stroke:var(--red)}
+.toast{position:fixed;left:50%;bottom:104px;transform:translateX(-50%);background:var(--tx);color:var(--ink);font:700 13px var(--body);padding:10px 16px;border-radius:99px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9;max-width:90%;text-align:center}
+.toast.on{opacity:1}
+.empty{text-align:center;color:var(--mut);padding:26px 10px}
+.tog{display:flex;align-items:center;gap:10px;margin-top:12px;color:var(--mut);font-size:13px;cursor:pointer}
+.tog input{width:18px;height:18px;accent-color:var(--red)}
+input[type=datetime-local]{width:100%;font:500 15px var(--body);color:var(--tx);background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:13px 14px;outline:none;color-scheme:dark}
+a.btn.sm{display:inline-block;text-align:center;text-decoration:none}
+.bub{padding:12px 14px;border-radius:18px;margin-bottom:10px;max-width:92%;font-size:14.5px;overflow-wrap:anywhere}
+.bub.u{background:var(--red);color:#fff;margin-left:auto;border-bottom-right-radius:6px}
+.bub.a{background:var(--panel);border:1px solid var(--line);border-bottom-left-radius:6px}
+button:focus-visible,.dot:focus-visible,.tab:focus-visible{outline:2px solid var(--tx);outline-offset:2px}
+
+/* AI tab: ChatGPT-style chat */
+.cg-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.cg-title{font:700 17px var(--display);display:flex;align-items:center;gap:8px}
+.cg-new{background:var(--panel);border:1px solid var(--line);color:var(--tx);border-radius:12px;padding:8px 12px;font:600 13px var(--body);cursor:pointer;display:flex;gap:6px;align-items:center}
+.cg-new svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cg-empty{display:flex;flex-direction:column;align-items:center;text-align:center;padding:40px 4px 10px}
+.cg-logo{width:52px;height:52px;border-radius:50%;background:var(--tx);color:var(--ink);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.cg-logo svg{width:28px;height:28px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.cg-empty h2{font-size:26px;margin-bottom:22px}
+.cg-sug{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%}
+.cg-sug button{background:var(--panel);border:1px solid var(--line);color:var(--tx);border-radius:16px;padding:12px;font:500 13.5px/1.35 var(--body);text-align:left;cursor:pointer}
+.cg-sug button:active{background:var(--panel2)}
+.cg-row{display:flex;gap:10px;margin:18px 0}
+.cg-row.u{justify-content:flex-end}
+.cg-u{background:#2a3042;border-radius:20px;padding:10px 16px;max-width:82%;overflow-wrap:anywhere;font-size:15px}
+.cg-av{flex:none;width:28px;height:28px;border-radius:50%;background:var(--tx);color:var(--ink);display:flex;align-items:center;justify-content:center;margin-top:2px}
+.cg-av svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cg-a{flex:1;min-width:0;overflow-wrap:anywhere;font-size:15px;line-height:1.55}
+.cg-act{display:flex;gap:4px;margin-top:6px}
+.cg-act button{background:none;border:0;color:var(--mut);padding:6px;border-radius:8px;cursor:pointer;display:flex}
+.cg-act button:hover{background:var(--panel)}
+.cg-act svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.cg-dots{display:inline-flex;gap:4px;padding:8px 0}
+.cg-dots i{width:7px;height:7px;border-radius:50%;background:var(--mut);animation:cgb 1.2s infinite ease-in-out}
+.cg-dots i:nth-child(2){animation-delay:.15s}.cg-dots i:nth-child(3){animation-delay:.3s}
+@keyframes cgb{0%,80%,100%{opacity:.25;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+.cg-bar{position:fixed;left:0;right:0;bottom:var(--tbh,92px);display:flex;justify-content:center;padding:6px 12px 8px;background:linear-gradient(to top,var(--ink) 75%,transparent);z-index:5}
+.cg-in{width:100%;max-width:496px;display:flex;align-items:flex-end;gap:8px;background:var(--panel2);border:1px solid var(--line);border-radius:26px;padding:6px 6px 6px 16px}
+.cg-in textarea{border:0;background:none;padding:9px 0;min-height:24px;max-height:140px;resize:none;border-radius:0;line-height:1.4}
+.cg-in textarea:focus{border:0}
+.cg-send{flex:none;width:38px;height:38px;border-radius:50%;border:0;background:var(--tx);color:var(--ink);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.cg-send:disabled{opacity:.3;cursor:default}
+.cg-send svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.cg-note{text-align:center;color:var(--mut);font-size:11.5px;margin:4px 0 0}
+</style>
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Rune Clips">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0c0e13">
+</head>
+<body>
+<div id="app"></div>
+<div class="tabbar"><div class="tabs" id="tabs"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const STAGES=["Idea","Scripted","Rendered","Uploaded"];
+const CHECKS=[
+  ["orig","Original script and angle, not copied from another video or article"],
+  ["src","Facts checked and sources saved"],
+  ["hook3","Strong hook in the first 3 seconds"],
+  ["ai","AI-use disclosure decided (turn it on if visuals look real but are synthetic)"],
+  ["music","Music is from the YouTube Audio Library or properly licensed"],
+  ["notcomp","Not a clip compilation or reused content without your own added value"],
+  ["meta","Title, description and tags ready"]
+];
+const ICON={
+  today:'<svg viewBox="0 0 24 24"><path d="M4 11.5 12 4l8 7.5V20a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg>',
+  writer:'<svg viewBox="0 0 24 24"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>',
+  plan:'<svg viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12"/><path d="M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg>',
+  ask:'<svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.6A8 8 0 1 1 21 12z"/><path d="M9.5 10h5M9.5 13.5h3"/></svg>',
+  post:'<svg viewBox="0 0 24 24"><path d="M21 3 10 14"/><path d="M21 3l-7 18-4-7-7-4z"/></svg>',
+  stats:'<svg viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>'
+};
+let S={videos:[],log:{},interval:1,niche:"history, science and odd true stories, 1-minute vertical Shorts",refs:"@ricksclips3000",money:{subs:0,views90:0,module:false},posts:[],chat:[],updatedAt:0};
+const UI={tab:"today",topic:"",score:true,run:null,res:null,open:null,detail:null};
+let ref=null,saveTimer=null,sample=null,mcp=null;
+/* ---- standalone: talk to Claude directly with the user's own API key ---- */
+const KEYN="rune_api_key";
+const getKey=()=>{try{return localStorage.getItem(KEYN)||""}catch(e){return ""}};
+const setKey=v=>{try{localStorage.setItem(KEYN,String(v).trim())}catch(e){}};
+const MODELS=["claude-sonnet-5-5","claude-sonnet-4-6"];
+const keyCard=()=>'<div class="card"><div class="sec">Connect AI</div><div class="m" style="margin-bottom:10px">Paste your Anthropic API key. It is saved only on this phone.</div><input type="password" id="apikey" placeholder="sk-ant-..." autocomplete="off" value="'+esc(getKey())+'"><div class="m" style="margin-top:8px">Get a key at console.anthropic.com. API use is billed separately from Claude plans.</div></div>';
+async function callClaude(body){
+  const key=getKey();
+  if(!key){toast("Add your API key in Stats, Settings");const e=new Error("Add your API key first. Paste it in the box above, or in Stats, Settings.");e.code="no_key";throw e}
+  let last;
+  for(const model of MODELS){
+    let r,j;
+    try{
+      r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"content-type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify(Object.assign({model},body))});
+      j=await r.json().catch(()=>({}));
+    }catch(err){const e=new Error("No internet connection.");e.code="offline";throw e}
+    if(r.ok)return j;
+    const msg=(j.error&&j.error.message)||("Error "+r.status);
+    const e=new Error(r.status===401?"Your API key was rejected. Check it in Stats, Settings.":msg);
+    e.code=r.status===401?"bad_key":r.status===429?"rate_limited":"api_error";last=e;
+    if(r.status===404||(r.status===400&&/model/i.test(msg)))continue;
+    throw e;
+  }
+  throw last;
+}
+const textOf=j=>(j.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("");
+async function sampleFn(input,opts){
+  opts=opts||{};
+  const messages=typeof input==="string"?[{role:"user",content:input}]:input.map(m=>({role:m.role,content:m.content}));
+  const tools=(opts.tools||[]).map(t=>({name:t.name,description:t.description,input_schema:t.inputSchema||{type:"object",properties:{}}}));
+  let acc="";
+  for(let i=0;i<6;i++){
+    const j=await callClaude(Object.assign({max_tokens:opts.maxTokens||3000,messages},tools.length?{tools}:{}));
+    acc+=textOf(j);
+    if(j.stop_reason==="tool_use"){
+      messages.push({role:"assistant",content:j.content});
+      const results=[];
+      for(const b of j.content.filter(b=>b.type==="tool_use")){
+        const tool=opts.tools.find(x=>x.name===b.name);let out;
+        try{out=String(await tool.execute(b.input))}catch(e){out="Error: "+(e.message||e)}
+        results.push({type:"tool_result",tool_use_id:b.id,content:out});
+      }
+      messages.push({role:"user",content:results});
+      if(opts.onText&&acc)opts.onText({text:acc});
+      continue;
+    }
+    if(opts.onText)opts.onText({text:acc});
+    return {text:acc,truncated:j.stop_reason==="max_tokens"};
+  }
+  return {text:acc,truncated:true};
+}
+sampleFn.json=async(input,opts)=>{
+  const r=await sampleFn(input,opts);
+  const m=r.text.replace(/```json|```/g,"").match(/[\[{][\s\S]*[\]}]/);
+  if(!m)throw new Error("The AI did not return a usable answer. Try again.");
+  return JSON.parse(m[0]);
+};
+
+
+const $=id=>document.getElementById(id);
+const pad=n=>String(n).padStart(2,"0");
+const ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const today=()=>{const d=new Date();d.setHours(0,0,0,0);return d};
+const parse=s=>{const[a,b,c]=s.split("-").map(Number);return new Date(a,b-1,c)};
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+const diff=(a,b)=>Math.round((a-b)/864e5);
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+const vid=id=>S.videos.find(v=>v.id===id);
+
+function toast(t){const e=$("toast");e.textContent=t;e.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("on"),2200)}
+async function copy(t){try{await navigator.clipboard.writeText(t);toast("Copied")}catch(e){toast("Copy is blocked here. Select the text instead.")}}
+
+function ensure(v){
+  if(typeof v.stage!=="number")v.stage=Math.max(0,STAGES.indexOf(v.status));
+  v.note=Object.assign({promise:"",hook:"",onscreen:"",script:"",loop:"",free:"",claims:[]},v.note||{});
+  if(!Array.isArray(v.note.claims))v.note.claims=[];
+  v.check=v.check||{};
+  v.result=Object.assign({views:"",engaged:"",viewed:"",avg:"",drop:"",label:""},v.result||{});
+  return v;
+}
+function normalize(){
+  S.log=S.log||{};
+  S.posts=Array.isArray(S.posts)?S.posts:[];
+  S.chat=Array.isArray(S.chat)?S.chat.filter(m=>m&&(m.role==='user'||m.role==='assistant')&&typeof m.content==='string').slice(-30):[];
+  S.money=Object.assign({subs:0,views90:0,module:false},S.money||{});
+  S.videos=(S.videos||[]).map(ensure);
+}
+
+/* storage */
+function lsGet(){try{return JSON.parse(localStorage.getItem("rune_studio")||"null")}catch(e){return null}}
+function lsSet(){try{localStorage.setItem("rune_studio",JSON.stringify(S))}catch(e){}}
+function save(){
+  S.updatedAt=Date.now();lsSet();clearTimeout(saveTimer);
+  saveTimer=setTimeout(async()=>{if(ref){try{await ref.set(S)}catch(e){}}},500);
+}
+
+/* streak: done days count, X breaks the chain, rest days are free and never break it */
+const doneDates=()=>Object.keys(S.log).filter(k=>S.log[k]==="done").sort();
+function gapBetween(a,b){ // days between two dates, minus rest days; flag if an X sits between
+  let gap=diff(a,b),missed=false;
+  for(let k=1;k<diff(a,b);k++){const v=S.log[ymd(addDays(b,k))];if(v==="x")missed=true;if(v==="rest")gap--}
+  return {gap,missed};
+}
+function streakFrom(ds){
+  let n=0;
+  for(let i=ds.length-1;i>=0;i--){
+    if(i===ds.length-1){n=1;continue}
+    const g=gapBetween(parse(ds[i+1]),parse(ds[i]));
+    if(g.gap>S.interval||g.missed)break;
+    n++;
+  }
+  return n;
+}
+function streak(){
+  const ds=doneDates();if(!ds.length)return 0;
+  const last=parse(ds[ds.length-1]),t=today();
+  const g=gapBetween(addDays(t,1),last); // include today as part of the span
+  if(g.gap-1>S.interval)return 0;
+  return streakFrom(ds);
+}
+function bestStreak(){
+  const ds=doneDates();let best=0;
+  for(let i=1;i<=ds.length;i++)best=Math.max(best,streakFrom(ds.slice(0,i)));
+  return best;
+}
+const weekDone=()=>doneDates().filter(k=>{const d=diff(today(),parse(k));return d>=0&&d<7}).length;
+const readyCount=v=>CHECKS.filter(([k])=>v.check[k]).length;
+
+/* views */
+function renderTabs(){
+  const T=[["today","Today"],["writer","Writer"],["plan","Plan"],["ask","AI"],["stats","Stats"]];
+  $("tabs").innerHTML=T.map(([k,l])=>'<button class="tab'+(UI.tab===k?" on":"")+'" data-tab="'+k+'">'+ICON[k]+l+'</button>').join("");
+}
+function viewToday(){
+  const t=today(),ds=doneDates(),st=S.log[ymd(t)];
+  const target=Math.max(1,Math.ceil(7/S.interval)),wd=weekDone();
+  const C=2*Math.PI*78,frac=Math.min(1,wd/target);
+  const ringCol=frac>=1?"var(--mint)":"var(--red)";
+  let msg,msg2;
+  const sk=streak();
+  if(st==="done"){msg="Uploaded. Nice work.";msg2="Next upload in "+S.interval+" day"+(S.interval>1?"s":"")+"."}
+  else if(st==="x"){msg="Skipped today";msg2="Tomorrow is a fresh start."}
+  else if(st==="rest"){msg="Rest day";msg2="Your streak is safe."}
+  else if(!ds.length){msg="Ready for video one?";msg2="Post a Short, then tap the button."}
+  else{
+    const lastD=parse(ds[ds.length-1]);
+    const left=S.interval-(diff(t,lastD)-restCount(lastD,t));
+    if(left<0){msg="Overdue by "+(-left)+" day"+(left===-1?"":"s");msg2="Post today to save your streak."}
+    else if(left===0){msg="Upload due today";msg2="Post a Short and tap the button."}
+    else{msg="Next upload in "+left+" day"+(left===1?"":"s");msg2="You are on schedule."}
+  }
+  const days=Array.from({length:7},(_,i)=>{
+    const d=addDays(t,i-6),k=ymd(d),s=S.log[k]||"";
+    return '<div><div class="dot '+s+(i===6?" today":"")+'" role="button" tabindex="0" data-day="'+k+'">'+(s==="done"?"&#10003;":s==="x"?"&times;":s==="rest"?"R":d.getDate())+'</div><div class="dl">'+d.toLocaleDateString(undefined,{weekday:"narrow"})+'</div></div>';
+  }).join("");
+  const nxt=S.videos.slice().reverse().find(v=>v.stage<STAGES.length-1);
+  let next;
+  if(nxt){
+    next='<div class="sec">Up next</div><div class="t">'+esc(nxt.title)+'</div>'
+      +'<div class="stepper big">'+STAGES.map((s,i)=>'<i class="'+(i<=nxt.stage?"on":"")+'"></i>').join("")+'</div>'
+      +'<div class="m" style="margin-bottom:12px">'+STAGES[nxt.stage]+' &middot; checklist '+readyCount(nxt)+' of '+CHECKS.length+'</div>'
+      +'<div class="row"><button class="btn sm ghost grow" data-detail="'+nxt.id+'">Open notes</button><button class="btn sm ghost grow" data-adv="'+nxt.id+'">Move to '+STAGES[nxt.stage+1]+'</button></div>';
+  }else{
+    next='<div class="sec">Up next</div><div class="t">Nothing planned yet</div><div class="m" style="margin:4px 0 12px">Let the Writer find a winning title and tags.</div><button class="btn ghost" data-tab="writer">Open Writer</button>';
+  }
+  return '<div class="top"><div class="brandrow"><img class="logo" alt="" src="data:image/png;base64,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"><div class="brand">Rune Clips</div></div><div class="date">'+t.toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"})+'</div></div>'
+  +'<div class="card hero"><div class="ring"><svg viewBox="0 0 176 176"><circle cx="88" cy="88" r="78" fill="none" stroke="var(--panel2)" stroke-width="12"/><circle cx="88" cy="88" r="78" fill="none" stroke="'+ringCol+'" stroke-width="12" stroke-linecap="round" stroke-dasharray="'+(C*frac).toFixed(1)+' '+C.toFixed(1)+'"/></svg><div class="c"><div class="n">'+sk+'</div><div class="l">day streak</div></div></div>'
+  +'<div class="msg">'+msg+'</div><p class="msg2">'+msg2+' &middot; '+wd+' of '+target+' this week</p>'
+  +(st==="done"?'<button class="btn ok" data-set="">Uploaded today &#10003; (tap to undo)</button>':'<button class="btn" data-set="done">I uploaded today</button>')
+  +(st==="x"||st==="rest"?'<div class="links"><button class="link" data-set="">Undo</button></div>':st==="done"?'':'<div class="links"><button class="link" data-set="rest">Rest day (keeps streak)</button><button class="link" data-set="x">I skipped today</button></div>')
+  +'</div>'
+  +scheduledCard()
+  +'<div class="card"><div class="sec">Last 7 days</div><div class="week">'+days+'</div><div class="m" style="margin-top:10px">Tap a day to change it: done, skipped, rest, empty.</div></div>'
+  +'<div class="card">'+next+'</div>';
+}
+function restCount(a,b){let n=0;for(let k=1;k<=diff(b,a);k++)if(S.log[ymd(addDays(a,k))]==="rest")n++;return n}
+
+function viewWriter(){
+  return '<div class="top"><div class="brand">Writer</div><div class="date">Titles, tags and hooks</div></div>'
+  +'<div class="card"><h2 style="font-size:20px;margin-bottom:6px">What is the video about?</h2>'
+  +'<div class="m" style="margin-bottom:12px">The Writer studies viral Shorts, trending videos and search data on vidIQ, then writes for your idea.</div>'
+  +'<textarea id="topic" placeholder="Example: the prisoner who tunneled into a bank from his cell">'+esc(UI.topic)+'</textarea>'
+  +'<label class="tog"><input type="checkbox" id="scoreTog"'+(UI.score?" checked":"")+'>Score the best titles with vidIQ (uses more credits)</label>'
+  +'<div style="margin-top:14px"><button class="btn" id="go"'+(UI.run&&UI.run.busy?" disabled":"")+'>Analyze and write</button></div>'
+  +'<div class="m" style="margin-top:10px">About 20 to 40 vidIQ credits per run.</div></div>'
+  +'<div class="card"><div class="sec">Good to know</div><div class="m">YouTube has not published how Shorts are ranked. Viewers decide: if they swipe away early, reach stops. So the first 3 seconds and the on-screen text matter most, and the title mainly helps search. This is creator guidance, not an official rule.</div></div>'
+  +'<div id="wOut">'+writerOut()+'</div>';
+}
+function writerOut(){
+  let h="";
+  const R=UI.run;
+  if(R&&R.steps.length){
+    h+='<div class="card"><div class="sec">Working</div><div class="steps">'+R.steps.map(s=>'<div class="st '+s.state+'"><span class="b"></span><span>'+esc(s.label)+(s.note?' <span class="m">'+esc(s.note)+'</span>':"")+'</span></div>').join("")+'</div></div>';
+  }
+  if(R&&R.error)h+='<div class="card"><div class="t">Heads up</div><div class="m" style="margin-top:6px">'+esc(R.error)+'</div></div>';
+  const r=UI.res;
+  if(r){
+    h+='<div class="card"><div class="sec">What is working right now</div><ul class="ins">'+r.insights.map(i=>'<li>'+esc(i)+'</li>').join("")+'</ul></div>';
+    h+='<div class="card"><div class="sec">Titles</div>'+r.titles.map((t,i)=>{
+      const sc=t.score!=null?Math.round(t.score):null;
+      return '<div class="title-row"><div class="score '+(sc==null?"":sc>=70?"hi":sc>=45?"mid":"")+'">'+(sc==null?"&ndash;":sc)+'</div><div class="grow">'
+        +(t.best?'<div class="best">Best pick</div>':"")+'<div class="t">'+esc(t.title)+'</div>'
+        +'<div class="m" style="margin-top:3px">'+t.title.length+' characters &middot; '+esc(t.pattern||"")+(t.why?" &middot; "+esc(t.why):"")+'</div>'
+        +'<div class="acts"><button class="btn sm ghost" data-ct="'+i+'">Copy</button><button class="btn sm" data-use="'+i+'">Save to Plan</button></div></div></div>';
+    }).join("")+'</div>';
+    h+='<div class="card"><div class="sec">Tags</div><div>'+r.tags.map(t=>'<span class="chip">'+esc(t)+'</span>').join("")+'</div>'
+      +'<div class="acts"><button class="btn sm ghost" data-cp="tags">Copy all tags</button></div></div>';
+    h+='<div class="card"><div class="sec">Description</div><div class="box">'+esc(r.description)+'</div>'
+      +'<div style="margin-top:10px">'+r.hashtags.map(t=>'<span class="chip red">'+esc(t)+'</span>').join("")+'</div>'
+      +'<div class="acts"><button class="btn sm ghost" data-cp="desc">Copy description and hashtags</button></div></div>';
+    h+='<div class="card"><div class="sec">Opening line (first 3 seconds)</div><div class="box">'+esc(r.hook)+'</div>'
+      +'<div class="sec" style="margin-top:14px">Thumbnail or on-screen text</div><div>'+r.thumb.map(t=>'<span class="chip">'+esc(t)+'</span>').join("")+'</div>'
+      +'<div class="acts"><button class="btn sm ghost" data-cp="hook">Copy opening line</button></div></div>';
+  }
+  return h;
+}
+
+function viewPlan(){
+  if(UI.detail&&vid(UI.detail))return viewDetail(vid(UI.detail));
+  UI.detail=null;
+  const list=S.videos.slice().sort((a,b)=>(a.stage===3)-(b.stage===3));
+  return '<div class="top"><div class="brand">Plan</div><div class="date">'+S.videos.filter(v=>v.stage<3).length+' to make</div></div>'
+  +'<div class="card"><div class="sec">Quick idea</div><div class="row"><input type="text" id="newTitle" placeholder="Type an idea and press Enter"><button class="btn sm" data-addgo="1">Add</button></div></div>'
+  +(list.length?list.map(v=>{
+    const rc=readyCount(v);
+    return '<div class="card"><div class="t btnlike" data-detail="'+v.id+'">'+esc(v.title)+'</div>'
+    +'<div class="stepper">'+STAGES.map((s,i)=>'<i class="'+(i<=v.stage?"on":"")+'"></i>').join("")+'</div>'
+    +'<div class="row"><div class="grow m">'+STAGES[v.stage]+(v.uploadedAt?" &middot; "+esc(v.uploadedAt):" &middot; checklist "+rc+" of "+CHECKS.length)+'</div>'
+    +(v.result.label?'<span class="chip '+(v.result.label==="Win"?"ok":v.result.label==="Flop"?"red":"warn")+'">'+esc(v.result.label)+'</span>':'')+'</div>'
+    +'<div class="acts"><button class="btn sm ghost" data-detail="'+v.id+'">Notes and checklist</button>'
+    +(v.stage<3?'<button class="btn sm ghost" data-adv="'+v.id+'">Move to '+STAGES[v.stage+1]+'</button>':'')
+    +'<button class="btn sm ghost" data-del="'+v.id+'">Delete</button></div></div>';
+  }).join(""):'<div class="empty">No videos yet. Type an idea above or use the Writer.</div>');
+}
+
+function wcText(s){
+  const w=s.trim()?s.trim().split(/\s+/).length:0,sec=Math.round(w/2.35);
+  const cls=w===0?"":(w>=110&&w<=170)?"ok":"warn";
+  return {html:'<span class="chip '+cls+'">'+w+' words &middot; about '+sec+' sec</span> <span class="m">Guide: 130 to 155 words fits a 60 second Short at a natural pace.</span>'};
+}
+function viewDetail(v){
+  const n=v.note,c=v.check,r=v.result,rc=readyCount(v);
+  const claims=n.claims.map((cl,i)=>'<div class="crow" data-ci="'+i+'"><input type="text" data-cf="text" value="'+esc(cl.text)+'" placeholder="A fact you state in the video"><div class="l2"><input type="text" data-cf="url" value="'+esc(cl.url)+'" placeholder="Source link"><label class="m" style="display:flex;gap:6px;align-items:center;white-space:nowrap"><input type="checkbox" data-cf="ok"'+(cl.ok?" checked":"")+'>Verified</label><button class="btn sm ghost" data-delclaim="'+i+'">&times;</button></div></div>').join("");
+  const pack=v.pack?'<div class="card"><div class="sec">Tags and description</div><div>'+v.pack.tags.map(t=>'<span class="chip">'+esc(t)+'</span>').join("")+'</div><div class="acts"><button class="btn sm ghost" data-vt="'+v.id+'">Copy tags</button></div><div class="box" style="margin-top:10px">'+esc(v.pack.description)+'</div><div class="acts"><button class="btn sm ghost" data-vd="'+v.id+'">Copy description</button></div></div>':'';
+  const results=v.stage===3?'<div class="card"><div class="sec">Results (check at 48 hours and 7 days)</div>'
+    +'<div class="g2"><div><label class="f" for="r1">Views</label><input type="number" id="r1" data-f="result.views" value="'+esc(r.views)+'" inputmode="numeric"></div>'
+    +'<div><label class="f" for="r2">Engaged views</label><input type="number" id="r2" data-f="result.engaged" value="'+esc(r.engaged)+'" inputmode="numeric"></div>'
+    +'<div><label class="f" for="r3">Viewed, not swiped away (%)</label><input type="number" id="r3" data-f="result.viewed" value="'+esc(r.viewed)+'" inputmode="decimal"></div>'
+    +'<div><label class="f" for="r4">Average % viewed</label><input type="number" id="r4" data-f="result.avg" value="'+esc(r.avg)+'" inputmode="decimal"></div></div>'
+    +'<label class="f" for="r5">Second where most people leave</label><input type="text" id="r5" data-f="result.drop" value="'+esc(r.drop)+'" placeholder="Example: 0:04 or 0:38">'
+    +'<label class="f" for="r6">Verdict</label><select id="r6" data-f="result.label"><option value="">Not rated</option><option'+(r.label==="Win"?" selected":"")+'>Win</option><option'+(r.label==="OK"?" selected":"")+'>OK</option><option'+(r.label==="Flop"?" selected":"")+'>Flop</option></select>'
+    +'<div class="m" style="margin-top:10px">Rules of thumb from creator data, not YouTube rules: viewed above 70% is working and above 80% is strong. A big gap between views and engaged views means a weak opening. Average % viewed above 100% means people replay it.</div></div>':'';
+  return '<button class="back" data-back="1">&larr; Back to Plan</button>'
+  +'<div class="card"><label class="f" for="vt" style="margin-top:0">Title</label><input type="text" id="vt" data-f="title" value="'+esc(v.title)+'">'
+  +'<div class="stepper big">'+STAGES.map((s,i)=>'<i class="'+(i<=v.stage?"on":"")+'"></i>').join("")+'</div>'
+  +'<div class="row"><div class="grow m">'+STAGES[v.stage]+'</div>'+(v.stage<3?'<button class="btn sm ghost" data-adv="'+v.id+'">Move to '+STAGES[v.stage+1]+'</button>':'')+'</div></div>'
+  +'<div class="card"><div class="row" style="margin-bottom:6px"><div class="sec grow" style="margin:0">Script and notes</div><button class="btn sm" id="draftBtn" data-draft="1">Draft with AI</button></div>'
+  +'<div class="m">The AI draft can get facts wrong. Check every fact in the list below before you post.</div>'
+  +'<label class="f" for="n1">Core promise (what the viewer learns by the end)</label><textarea id="n1" data-f="note.promise" rows="2">'+esc(n.promise)+'</textarea>'
+  +'<label class="f" for="n2">Hook, spoken in the first 3 seconds</label><textarea id="n2" data-f="note.hook" rows="2">'+esc(n.hook)+'</textarea>'
+  +'<label class="f" for="n3">On-screen text</label><input type="text" id="n3" data-f="note.onscreen" value="'+esc(n.onscreen)+'">'
+  +'<label class="f" for="n4">Narration script</label><textarea class="tall" id="n4" data-f="note.script">'+esc(n.script)+'</textarea><div id="wc" style="margin-top:8px">'+wcText(n.script).html+'</div>'
+  +'<label class="f" for="n5">Loop line (last line that flows back into the first)</label><input type="text" id="n5" data-f="note.loop" value="'+esc(n.loop)+'">'
+  +'<label class="f" for="n6">Other notes</label><textarea id="n6" data-f="note.free" rows="3">'+esc(n.free)+'</textarea></div>'
+  +'<div class="card"><div class="sec">Fact check</div>'+(claims||'<div class="m">No facts listed yet. Add each fact you state and its source.</div>')+'<div class="acts"><button class="btn sm ghost" data-addclaim="1">Add a fact</button></div></div>'
+  +'<div class="card"><div class="row" style="margin-bottom:4px"><div class="sec grow" style="margin:0">Before you upload</div><span class="chip '+(rc===CHECKS.length?"ok":"warn")+'" id="ready">'+rc+' of '+CHECKS.length+'</span></div>'
+  +CHECKS.map(([k,l])=>'<label class="chk"><input type="checkbox" data-f="check.'+k+'"'+(c[k]?" checked":"")+'><span>'+l+'</span></label>').join("")+'</div>'
+  +pack+results;
+}
+
+function viewStats(){
+  const ds=doneDates(),t=today(),M=S.money;
+  const n30=ds.filter(k=>{const d=diff(t,parse(k));return d>=0&&d<30}).length;
+  const tgt=Math.max(1,Math.ceil(30/S.interval));
+  const cons=Math.min(100,Math.round(n30/tgt*100));
+  const wk=[0,0,0,0,0,0,0];ds.forEach(k=>wk[(parse(k).getDay()+6)%7]++);
+  const mx=Math.max(1,...wk),names=["M","T","W","T","F","S","S"];
+  const pc=(a,b)=>Math.min(100,Math.round((+a||0)/b*100));
+  const wins=S.videos.filter(v=>v.result.label==="Win").length;
+  return '<div class="top"><div class="brand">Stats</div><div class="date">Your upload habit</div></div>'
+  +'<div class="tiles"><div class="tile"><b>'+streak()+'</b><span>Current streak</span></div><div class="tile"><b>'+bestStreak()+'</b><span>Best streak</span></div>'
+  +'<div class="tile"><b>'+cons+'%</b><span>Goal met, last 30 days</span></div><div class="tile"><b>'+wins+'</b><span>Videos rated Win</span></div></div>'
+  +'<div class="card"><div class="sec">Uploads by weekday</div><div class="bars">'+wk.map((c,i)=>'<div><span>'+c+'</span><i style="height:'+Math.round(c/mx*70)+'px"></i><span>'+names[i]+'</span></div>').join("")+'</div></div>'
+  +'<div class="card"><div class="sec">Monetization progress</div>'
+  +'<label class="f" for="ms" style="margin-top:0">Subscribers</label><input type="number" id="ms" data-f="money.subs" value="'+esc(M.subs||"")+'" inputmode="numeric" placeholder="0"><div class="prog'+(pc(M.subs,1000)>=100?" full":"")+'" id="p1"><i style="width:'+pc(M.subs,1000)+'%"></i></div><div class="m">'+pc(M.subs,1000)+'% of 1,000</div>'
+  +'<label class="f" for="mv">Shorts views, last 90 days (engaged views)</label><input type="number" id="mv" data-f="money.views90" value="'+esc(M.views90||"")+'" inputmode="numeric" placeholder="0"><div class="prog'+(pc(M.views90,1e7)>=100?" full":"")+'" id="p2"><i style="width:'+pc(M.views90,1e7)+'%"></i></div><div class="m">'+pc(M.views90,1e7)+'% of 10,000,000</div>'
+  +'<label class="tog"><input type="checkbox" data-f="money.module"'+(M.module?" checked":"")+'>I accepted the Shorts Monetization Module in YouTube Studio</label>'
+  +'<div class="m" style="margin-top:12px">Official rule: full monetization needs 1,000 subscribers plus either 10 million Shorts views in 90 days or 4,000 public long-form watch hours. Watch time in the Shorts feed does not count toward the 4,000 hours. YouTube announced new Partner Program terms starting February 1, 2027, so accept them in Studio by January 31, 2027. Check the Earn tab in Studio for the latest numbers.</div></div>'
+  +'<div class="card"><div class="sec">Settings</div>'
+  +'<label class="f" for="goal" style="margin-top:0">Upload goal</label><select id="goal"><option value="1">Every day</option><option value="2">Every 2 days</option><option value="3">Every 3 days</option><option value="7">Every week</option></select>'
+  +'<label class="f" for="niche">Your channel niche</label><input type="text" id="niche" value="'+esc(S.niche)+'">'
+  +'<label class="f" for="refs">Channels to learn from (comma separated)</label><input type="text" id="refs" value="'+esc(S.refs)+'"></div>'+keyCard();
+}
+function render(keepScroll){
+  renderTabs();
+  const y=window.scrollY;
+  const v={today:viewToday,writer:viewWriter,plan:viewPlan,post:viewPost,ask:viewAsk,stats:viewStats}[UI.tab]();
+  $("app").innerHTML=v;
+  if(UI.tab==="stats")$("goal").value=String(S.interval);
+  const tb=document.querySelector(".tabbar");if(tb)document.documentElement.style.setProperty("--tbh",tb.offsetHeight+"px");
+  const q=$("q");if(q&&q.value){q.style.height="auto";q.style.height=Math.min(q.scrollHeight,140)+"px"}
+  window.scrollTo(0,keepScroll?y:0);
+}
+
+/* actions */
+function setDay(k,v){if(v)S.log[k]=v;else delete S.log[k];save();render(true)}
+function advance(id){
+  const v=vid(id);if(!v||v.stage>=3)return;
+  const rc=readyCount(v);
+  v.stage++;
+  if(v.stage===3){
+    v.uploadedAt=ymd(today());S.log[ymd(today())]="done";
+    toast(rc<CHECKS.length?"Marked uploaded. Checklist was "+rc+" of "+CHECKS.length+".":"Marked uploaded. Streak updated.");
+  }
+  save();render(true);
+}
+function addVideo(title,pack,note){
+  const v=ensure({id:uid(),title,stage:0,uploadedAt:null,pack:pack||null});
+  if(note)Object.assign(v.note,note);
+  S.videos.unshift(v);save();return v;
+}
+function setPath(path,val){
+  const parts=path.split(".");
+  if(parts[0]==="money"){S.money[parts[1]]=parts[1]==="module"?val:(val===""?0:+val);return}
+  const v=vid(UI.detail);if(!v)return;
+  if(parts.length===1)v[parts[0]]=val;else v[parts[0]][parts[1]]=val;
+}
+const SEL="[data-tab],[data-set],[data-day],[data-adv],[data-del],[data-open],[data-addgo],[data-ct],[data-use],[data-cp],[data-vt],[data-vd],[data-detail],[data-back],[data-addclaim],[data-delclaim],[data-draft],[data-pa],[data-ask],#go";
+document.addEventListener("click",e=>{
+  const b=e.target.closest(SEL);
+  if(!b)return;
+  const d=b.dataset;
+  if(d.tab){UI.tab=d.tab;if(d.tab!=="plan")UI.detail=null;render();if(d.tab==="post")onOpenPost();if(d.tab==="ask")askScroll()}
+  else if(d.set!==undefined)setDay(ymd(today()),d.set)
+  else if(d.day){const c=S.log[d.day];setDay(d.day,!c?"done":c==="done"?"x":c==="x"?"rest":"")}
+  else if(d.adv)advance(d.adv)
+  else if(d.del){S.videos=S.videos.filter(v=>v.id!==d.del);save();render(true)}
+  else if(d.detail){UI.tab="plan";UI.detail=d.detail;render()}
+  else if(d.back){UI.detail=null;render()}
+  else if(d.addgo){const i=$("newTitle"),t=i.value.trim();if(t){addVideo(t);render(true);const n=$("newTitle");n&&n.focus()}}
+  else if(d.addclaim){vid(UI.detail).note.claims.push({text:"",url:"",ok:false});save();render(true)}
+  else if(d.delclaim!==undefined){vid(UI.detail).note.claims.splice(+d.delclaim,1);save();render(true)}
+  else if(d.pa)postAction(d)
+  else if(d.ask)askAction(d)
+  else if(d.draft)draftScript();
+  else if(d.ct!==undefined)copy(UI.res.titles[+d.ct].title)
+  else if(d.use!==undefined){
+    const r=UI.res;
+    addVideo(r.titles[+d.use].title,{tags:r.tags,description:r.description+"\n\n"+r.hashtags.join(" "),hook:r.hook},{hook:r.hook,onscreen:r.thumb[0]||""});
+    toast("Saved to Plan")
+  }
+  else if(d.cp==="tags")copy(UI.res.tags.join(", "))
+  else if(d.cp==="desc")copy(UI.res.description+"\n\n"+UI.res.hashtags.join(" "))
+  else if(d.cp==="hook")copy(UI.res.hook)
+  else if(d.vt)copy(vid(d.vt).pack.tags.join(", "))
+  else if(d.vd)copy(vid(d.vd).pack.description)
+  else if(b.id==="go")runWriter();
+});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&e.target.classList&&e.target.classList.contains("dot"))e.target.click();
+  if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing&&e.target.id==="q"){e.preventDefault();sendAsk(e.target.value)}
+  if(e.key==="Enter"&&e.target.id==="newTitle"){const b=document.querySelector("[data-addgo]");b&&b.click()}
+});
+document.addEventListener("input",e=>{
+  const t=e.target,id=t.id;
+  if(t.dataset&&t.dataset.p){UI.post[t.dataset.p]=t.type==="checkbox"?t.checked:t.value;return}
+  if(id==="apikey"){setKey(t.value);return}
+  if(id==="q"){UI.askDraft=t.value;t.style.height="auto";t.style.height=Math.min(t.scrollHeight,140)+"px";return}
+  if(id==="topic"){UI.topic=t.value;return}
+  if(id==="niche"){S.niche=t.value;save();return}
+  if(id==="refs"){S.refs=t.value;save();return}
+  if(t.dataset&&t.dataset.cf){
+    const row=t.closest("[data-ci]"),v=vid(UI.detail);
+    if(row&&v){const cl=v.note.claims[+row.dataset.ci],f=t.dataset.cf;cl[f]=f==="ok"?t.checked:t.value;save()}
+    return;
+  }
+  const f=t.dataset&&t.dataset.f;
+  if(f){
+    setPath(f,t.type==="checkbox"?t.checked:t.value);save();
+    if(f==="note.script")$("wc").innerHTML=wcText(t.value).html;
+    if(f.indexOf("check.")===0){const v=vid(UI.detail),r=$("ready");if(v&&r){const n=readyCount(v);r.textContent=n+" of "+CHECKS.length;r.className="chip "+(n===CHECKS.length?"ok":"warn")}}
+    if(f==="money.subs"||f==="money.views90"){
+      const M=S.money,p=(a,b)=>Math.min(100,Math.round((+a||0)/b*100));
+      const subs=p(M.subs,1000),vw=p(M.views90,1e7);
+      $("p1").className="prog"+(subs>=100?" full":"");$("p1").firstChild.style.width=subs+"%";$("p1").nextSibling.textContent=subs+"% of 1,000";
+      $("p2").className="prog"+(vw>=100?" full":"");$("p2").firstChild.style.width=vw+"%";$("p2").nextSibling.textContent=vw+"% of 10,000,000";
+    }
+  }
+});
+document.addEventListener("change",e=>{
+  const id=e.target.id;
+  if(id==="goal"){S.interval=+e.target.value;save()}
+  if(id==="scoreTog")UI.score=e.target.checked;
+  if(id==="r6"){render(true)}
+  const dp=e.target.dataset&&e.target.dataset.p;
+  if(dp==="planId"){UI.post.planId=e.target.value;fillFromPlan();render(true)}
+  else if(dp){UI.post[dp]=e.target.type==="checkbox"?e.target.checked:e.target.value;if(e.target.dataset.rr)render(true)}
+});
+
+/* AI script draft (no vidIQ credits) */
+async function draftScript(){
+  const v=vid(UI.detail);if(!v)return;
+  if(!sample){toast("The AI writer is not available in this view");return}
+  const b=$("draftBtn");b.disabled=true;b.textContent="Writing...";
+  try{
+    const prompt='You write narrated YouTube Shorts scripts for a channel about: '+S.niche+'.\nVIDEO TITLE: '+v.title+'\n'
+      +'Write the script. Rules: 130 to 150 spoken words of narration only (no stage directions, no emojis). Open with the strangest, most surprising moment, not an intro. Build 3 to 5 beats linked with "but" and "therefore". Pay off the promise at the end. No "like and subscribe". The final line should flow back into the first line so the Short loops. Do NOT invent quotes, dates, numbers or names. If you are not sure of a fact, leave it out.\n'
+      +'Also list every factual claim the script makes so the creator can verify each one.\n'
+      +'Return ONLY JSON: {"promise":"one sentence","hooks":[{"pattern":"name","line":"","onscreen":"max 4 words"}],"script":"","loop":"the final line","claims":["..."]} with exactly 3 hooks.';
+    const out=await sample.json(prompt,{modelTier:"default",cache:false});
+    const n=v.note,hooks=Array.isArray(out.hooks)?out.hooks:[];
+    if(!n.promise&&out.promise)n.promise=String(out.promise);
+    if(!n.hook&&hooks[0])n.hook=String(hooks[0].line||"");
+    if(!n.onscreen&&hooks[0])n.onscreen=String(hooks[0].onscreen||"");
+    if(!n.script&&out.script)n.script=String(out.script);
+    if(!n.loop&&out.loop)n.loop=String(out.loop);
+    if(hooks.length>1)n.free=(n.free?n.free+"\n\n":"")+"Other hook options:\n"+hooks.slice(1).map(h=>"- "+(h.pattern||"Hook")+": "+(h.line||"")+" [on screen: "+(h.onscreen||"")+"]").join("\n");
+    (Array.isArray(out.claims)?out.claims:[]).forEach(c=>n.claims.push({text:String(c),url:"",ok:false}));
+    save();render(true);toast("Draft added. Verify each fact before posting.");
+  }catch(e){
+    toast(e&&e.code==="not_granted"?"The AI writer needs your permission":"Could not write right now. Try again.");
+    const bb=$("draftBtn");if(bb){bb.disabled=false;bb.textContent="Draft with AI"}
+  }
+}
+
+/* writer */
+const clip=(x,n)=>{let s=typeof x==="string"?x:JSON.stringify(x);return s.length>n?s.slice(0,n)+" ...":s};
+function findScore(o,d){
+  d=d||0;if(d>5||o==null)return null;
+  if(typeof o==="number")return o;
+  if(typeof o==="string"){const m=o.match(/\b(\d{1,3}(?:\.\d+)?)\b/);return m?+m[1]:null}
+  if(typeof o==="object"){
+    for(const k of Object.keys(o))if(/score/i.test(k)){const v=findScore(o[k],d+1);if(v!=null)return v}
+    for(const k of Object.keys(o)){const v=findScore(o[k],d+1);if(v!=null)return v}
+  }
+  return null;
+}
+function errText(e){
+  const c=e&&e.code;
+  if(c==="needs_reauth")return "vidIQ needs you to reconnect it in Settings, Connectors.";
+  if(c==="server_not_connected")return "vidIQ is not connected. Add it in Settings, Connectors.";
+  if(c==="approval_required"||c==="not_in_manifest"||c==="consent_required")return "vidIQ access was not allowed for this app.";
+  if(c==="rate_limited"||c==="server_unavailable")return "vidIQ is busy. Try again in a minute.";
+  return (e&&e.message)?String(e.message).slice(0,120):"unknown error";
+}
+async function runWriter(){
+  const topic=($("topic")&&$("topic").value||UI.topic).trim();
+  if(!topic){toast("Type your video idea first");return}
+  UI.topic=topic;
+  if(!sample){UI.run={busy:false,steps:[],error:"The AI writer is not available in this view. Open the app in Claude and try again."};$("wOut").innerHTML=writerOut();return}
+  UI.res=null;
+  const steps=[
+    {label:"Understanding your idea",state:"run"},
+    {label:"Searching viral Shorts and trends",state:"wait"},
+    {label:"Checking search demand",state:"wait"},
+    {label:"Studying your reference channels",state:"wait"},
+    {label:"Writing titles, tags and hook",state:"wait"},
+    {label:"Scoring titles",state:"wait"}
+  ];
+  UI.run={busy:true,steps,error:null};
+  $("go").disabled=true;
+  const upd=(i,state,note)=>{steps[i].state=state;steps[i].note=note||"";$("wOut").innerHTML=writerOut()};
+  upd(0,"run");
+  try{
+    let seed={keyword:topic.split(/\s+/).slice(0,4).join(" "),question:topic.split(/\s+/).slice(0,3).join(" ")};
+    try{
+      const s=await sample.json('A YouTube Shorts creator wants to make a video about: "'+topic+'"\nGive the best short search seeds for YouTube research.\nReturn ONLY JSON: {"keyword":"2-4 word core search phrase","question":"1-3 word seed for question searches"}',{modelTier:"quick"});
+      if(s&&s.keyword)seed=s;
+    }catch(e){}
+    upd(0,"ok",seed.keyword);
+    const vcall=(tool,input)=>mcp.callTool("vidIQ",tool,input,{cache:{staleTime:600000,gcTime:900000}}).then(r=>r.payload!==undefined?r.payload:r);
+    const data={outliers:null,trending:null,keywords:null,questions:null,refs:[]};
+    const notes=[];
+    const T=[];
+    if(mcp){
+      T.push(Promise.allSettled([
+        vcall("vidiq_outliers",{keyword:seed.keyword,contentType:"short",publishedWithin:"threeMonths",limit:10,sort:"breakoutScore"}),
+        vcall("vidiq_trending_videos",{videoFormat:"short",titleQuery:seed.keyword,sortBy:"recentVph",limit:8,videoTitleLanguage:"en"})
+      ]).then(([o,t])=>{
+        if(o.status==="fulfilled")data.outliers=o.value;
+        if(t.status==="fulfilled")data.trending=t.value;
+        const bad=[o,t].find(x=>x.status==="rejected");
+        upd(1,bad&&!data.outliers&&!data.trending?"fail":"ok",bad&&!data.outliers&&!data.trending?errText(bad.reason):"");
+        if(bad)notes.push(errText(bad.reason));
+      }));
+      T.push(Promise.allSettled([
+        vcall("vidiq_keyword_research",{keyword:seed.keyword,mode:"research",limit:15}),
+        vcall("vidiq_keyword_research",{keyword:seed.question||seed.keyword,mode:"questions",limit:8})
+      ]).then(([k,q])=>{
+        if(k.status==="fulfilled")data.keywords=k.value;
+        if(q.status==="fulfilled")data.questions=q.value;
+        const bad=[k,q].find(x=>x.status==="rejected");
+        upd(2,bad&&!data.keywords&&!data.questions?"fail":"ok",bad&&!data.keywords&&!data.questions?errText(bad.reason):"");
+        if(bad)notes.push(errText(bad.reason));
+      }));
+      const refs=S.refs.split(",").map(x=>x.trim()).filter(Boolean).slice(0,2);
+      T.push(Promise.allSettled(refs.map(r=>vcall("vidiq_channel_videos",{channelId:r,videoFormat:"short",popular:true}).then(v=>({ch:r,v})))).then(rs=>{
+        rs.forEach(x=>{if(x.status==="fulfilled")data.refs.push(x.value)});
+        const bad=rs.find(x=>x.status==="rejected");
+        upd(3,!refs.length?"skip":data.refs.length?"ok":"fail",!refs.length?"none set":data.refs.length?"":errText(bad&&bad.reason));
+      }));
+      await Promise.all(T);
+    }else{
+      upd(1,"fail","vidIQ is not available here");upd(2,"skip");upd(3,"skip");
+    }
+    upd(4,"run");
+    const haveData=!!(data.outliers||data.trending||data.keywords||data.questions||data.refs.length);
+    const prompt='You are a YouTube Shorts growth strategist writing for a new channel.\n'
+      +'CHANNEL NICHE: '+S.niche+'\nVIDEO IDEA: '+topic+'\n\n'
+      +(haveData?'REAL YOUTUBE DATA (from vidIQ, may be messy JSON):\n'
+        +'[VIRAL SHORTS ON THIS TOPIC, ranked by breakout score]\n'+clip(data.outliers||"unavailable",4500)+'\n\n'
+        +'[TRENDING SHORTS RIGHT NOW]\n'+clip(data.trending||"unavailable",3500)+'\n\n'
+        +'[KEYWORDS: search volume and competition]\n'+clip(data.keywords||"unavailable",3500)+'\n\n'
+        +'[QUESTION SEARCHES]\n'+clip(data.questions||"unavailable",2000)+'\n\n'
+        +'[TOP SHORTS FROM CHANNELS THE CREATOR WANTS TO LEARN FROM]\n'+clip(data.refs.length?data.refs:"unavailable",4500)+'\n\n'
+        :'No live data could be loaded. Use your best knowledge of what works on Shorts and say so in the first insight.\n\n')
+      +'TASK: Study the data. Find the title patterns, word choices, lengths and angles that outperform. Then write for the video idea. Take patterns from the data, never copy another creator\'s title or script word for word.\n'
+      +'RULES: titles under 55 characters, curiosity-driven, truthful, no emojis, no hashtags, each using a different pattern. Tags must favor real keywords from the data with demand and low competition, lowercase, 15 to 20 tags, under 480 characters total. Description: two short sentences that name the topic plainly, plus one line inviting a topic-specific comment, no links. Opening line: under 14 words, spoken in the first 3 seconds, starts at the strangest moment or poses a question the viewer needs answered. On-screen text: 3 options, max 4 words, that imply more than the narration says.\n'
+      +'Return ONLY JSON: {"insights":["3 to 4 specific findings from the data, mention actual numbers or title patterns you saw"],"titles":[{"title":"","pattern":"2-3 word pattern name","why":"under 12 words"}],"tags":[""],"hashtags":["#"],"description":"","hook":"","thumb":[""]}\n'
+      +'Give exactly 8 titles and 5 hashtags.';
+    const out=await sample.json(prompt,{modelTier:"default",cache:false});
+    upd(4,"ok");
+    const clean=a=>(Array.isArray(a)?a:[]).map(x=>String(x).trim()).filter(Boolean);
+    const res={
+      insights:clean(out.insights),
+      titles:(Array.isArray(out.titles)?out.titles:[]).filter(t=>t&&t.title).map(t=>({title:String(t.title).trim(),pattern:t.pattern||"",why:t.why||"",score:null,best:false})),
+      tags:clean(out.tags),hashtags:clean(out.hashtags).map(h=>h[0]==="#"?h:"#"+h),
+      description:String(out.description||"").trim(),hook:String(out.hook||"").trim(),thumb:clean(out.thumb)
+    };
+    if(!res.titles.length)throw new Error("No titles came back. Try again.");
+    if(UI.score&&mcp){
+      upd(5,"run");
+      const top=res.titles.slice(0,5);
+      const sc=await Promise.allSettled(top.map(t=>vcall("vidiq_score_title",{title:t.title,type:"short"})));
+      let okc=0;
+      sc.forEach((r,i)=>{if(r.status==="fulfilled"){const v=findScore(r.value);if(v!=null){top[i].score=v;okc++}}});
+      if(okc){
+        res.titles.sort((a,b)=>(b.score==null?-1:b.score)-(a.score==null?-1:a.score));
+        res.titles[0].best=true;
+        upd(5,"ok");
+      }else upd(5,"fail","no scores returned");
+    }else upd(5,"skip",UI.score?"vidIQ unavailable":"turned off");
+    UI.res=res;
+    UI.run.busy=false;
+    if(!haveData&&notes.length)UI.run.error="vidIQ data did not load ("+notes[0]+"). The results use general knowledge only.";
+  }catch(e){
+    UI.run.busy=false;
+    UI.run.error=(e&&e.code==="not_granted")?"The AI writer needs your permission. Press Analyze again and allow it.":((e&&e.message)?String(e.message).slice(0,160):"Something went wrong. Try again.");
+  }
+  if(UI.tab==="writer"){const g=$("go");if(g)g.disabled=false;$("wOut").innerHTML=writerOut()}
+}
+
+/* ---------- Posting: schedule to YouTube and TikTok through vidIQ ---------- */
+let dbResolve;const dbReady=new Promise(r=>{dbResolve=r});
+function newPost(){
+  return {planId:"",url:"",uploadId:"",vstate:"",vnote:"",title:"",desc:"",tags:"",when:ymd(addDays(today(),1))+"T07:00",
+    ytOn:true,ytPriv:"",ttOn:false,ttPriv:"",ttComment:"",ttAi:"",ttMusic:false,draft:null,busy:"",msg:""};
+}
+UI.post=newPost();
+UI.acc={loaded:false,yt:null,tt:null,ttAny:null,err:"",link:"",ytLink:""};
+function walk(o,fn,d){d=d||0;if(o==null||d>7||typeof o!=="object")return;for(const k of Object.keys(o)){fn(k,o[k]);walk(o[k],fn,d+1)}}
+function deepFind(o,re){let r=null;walk(o,(k,v)=>{if(r==null&&re.test(k)&&(typeof v==="string"||typeof v==="number"))r=v});return r}
+const vp=(tool,input)=>mcp.callTool("vidIQ",tool,input,{cache:false}).then(r=>{let x=r.payload!==undefined?r.payload:r;if(typeof x==="string"){try{x=JSON.parse(x)}catch(e){}}return x});
+const rr=()=>{if(UI.tab==="post")render(true)};
+const emsg=e=>(e&&e.code)?errText(e):(e&&e.message?String(e.message).slice(0,160):"Something went wrong.");
+const fmtWhen=iso=>new Date(iso).toLocaleString(undefined,{weekday:"short",month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"});
+const NAMES={YOUTUBE:"YouTube",TIKTOK:"TikTok"};
+
+async function loadAccounts(){
+  if(!mcp){UI.acc.err="vidIQ is not available in this view.";UI.acc.loaded=true;rr();return}
+  try{
+    const p=await vp("vidiq_social_account_list",{});
+    const arr=Array.isArray(p)?p:(p&&Array.isArray(p.accounts)?p.accounts:[]);
+    UI.acc.yt=arr.find(a=>a.platform==="YOUTUBE"&&a.canPublish)||null;
+    UI.acc.tt=arr.find(a=>a.platform==="TIKTOK"&&a.canPublish)||null;
+    UI.acc.ttAny=arr.find(a=>a.platform==="TIKTOK")||null;
+    UI.acc.err="";
+  }catch(e){UI.acc.err=emsg(e)}
+  UI.acc.loaded=true;rr();
+}
+function onOpenPost(){if(!UI.acc.loaded)loadAccounts();syncPosts(true)}
+function fillFromPlan(){
+  const P=UI.post,v=vid(P.planId);if(!v)return;
+  P.title=v.title;
+  if(v.pack){P.desc=v.pack.description;P.tags=v.pack.tags.join(", ")}
+}
+function scheduledCard(){
+  const up=S.posts.filter(p=>p.status==="scheduled").sort((a,b)=>a.publishAt.localeCompare(b.publishAt)).slice(0,2);
+  if(!up.length)return "";
+  return '<div class="card"><div class="sec">Scheduled to post</div>'
+    +up.map(p=>'<div style="margin-bottom:10px"><div class="t">'+esc(p.title)+'</div><div class="m">'+fmtWhen(p.publishAt)+' &middot; '+p.names.map(n=>NAMES[n]||n).join(" + ")+'</div></div>').join("")
+    +'<div class="m">These go out on their own, even if this app is closed. Open the app after posting and the day is marked done for you.</div></div>';
+}
+function viewPost(){
+  const P=UI.post,A=UI.acc;
+  const optS=(arr,val)=>arr.map(([v,l])=>'<option value="'+v+'"'+(val===v?" selected":"")+'>'+l+'</option>').join("");
+  const chip=a=>a?'<span class="chip ok">Connected</span>':'<span class="chip warn">'+(A.loaded?"Not connected":"Checking...")+'</span>';
+  const ytBtn=A.yt?"":(A.ytLink?'<a class="btn sm" href="'+esc(A.ytLink)+'" target="_blank" rel="noopener">Open YouTube sign-in</a>':'<button class="btn sm" data-pa="ytconnect">Connect YouTube</button>')+(A.ytFail?'<a class="btn sm ghost" href="https://app.vidiq.com" target="_blank" rel="noopener">Connect in vidIQ</a>':'');
+  const ttBtn=A.tt?"":(A.link?'<a class="btn sm" href="'+esc(A.link)+'" target="_blank" rel="noopener">Open TikTok sign-in</a>':'<button class="btn sm" data-pa="ttconnect">Connect TikTok</button>');
+  const posts=S.posts.length?'<div class="card"><div class="row" style="margin-bottom:10px"><div class="sec grow" style="margin:0">Your scheduled posts</div><button class="btn sm ghost" data-pa="sync">Check status</button></div>'
+    +S.posts.map((p,i)=>'<div class="row" style="padding:10px 0;border-top:1px solid var(--line)"><div class="grow"><div class="t">'+esc(p.title)+'</div><div class="m">'+fmtWhen(p.publishAt)+' &middot; '+p.names.map(n=>NAMES[n]||n).join(" + ")+(p.link?' &middot; <a href="'+esc(p.link)+'" target="_blank" rel="noopener" style="color:var(--tx)">Open</a>':'')+'</div>'
+      +(p.note&&p.status!=="live"?'<div class="m">vidIQ says: '+esc(p.note)+'</div>':'')+'</div>'
+      +'<span class="chip '+(p.status==="live"?"ok":p.status==="scheduled"?"warn":"red")+'">'+(p.status==="live"?"Posted":p.status==="scheduled"?"Scheduled":p.status==="failed"?"Failed":"Cancelled")+'</span>'
+      +'<button class="btn sm ghost" data-pa="delpost" data-i="'+i+'">&times;</button></div>').join("")+'</div>':'';
+  const planOpts='<option value="">Pick a video from your Plan (optional)</option>'+S.videos.filter(v=>v.stage<3).map(v=>'<option value="'+v.id+'"'+(P.planId===v.id?" selected":"")+'>'+esc(v.title)+'</option>').join("");
+  const yt=A.yt?'<label class="tog" style="color:var(--tx)"><input type="checkbox" data-p="ytOn" data-rr="1"'+(P.ytOn?" checked":"")+'>Post to YouTube</label>'
+    +(P.ytOn?'<label class="f" for="ypr">Who can watch (you choose)</label><select id="ypr" data-p="ytPriv"><option value="">Choose...</option>'+optS([["public","Public at the scheduled time"],["private","Private"]],P.ytPriv)+'</select><div class="m" style="margin-top:6px">A scheduled video uploads as private and YouTube makes it public at your time.</div>':'')
+    :'<div class="m">YouTube is not connected. Use Connect YouTube above, sign in, then come back and press Refresh.</div>';
+  const tt=A.tt?'<label class="tog" style="color:var(--tx);margin-top:16px"><input type="checkbox" data-p="ttOn" data-rr="1"'+(P.ttOn?" checked":"")+'>Post to TikTok</label>'
+    +(P.ttOn?'<label class="f" for="tpr">Who can watch (you choose)</label><select id="tpr" data-p="ttPriv"><option value="">Choose...</option>'+optS([["PUBLIC_TO_EVERYONE","Everyone"],["MUTUAL_FOLLOW_FRIENDS","Friends"],["FOLLOWER_OF_CREATOR","Followers"],["SELF_ONLY","Only me"]],P.ttPriv)+'</select>'
+      +'<label class="f" for="tcm">Allow comments?</label><select id="tcm" data-p="ttComment"><option value="">Choose...</option>'+optS([["yes","Yes"],["no","No"]],P.ttComment)+'</select>'
+      +'<label class="f" for="tai">Is the video AI-generated or mostly AI-made?</label><select id="tai" data-p="ttAi"><option value="">Choose...</option>'+optS([["yes","Yes"],["no","No"]],P.ttAi)+'</select>'
+      +'<label class="tog" style="color:var(--tx)"><input type="checkbox" data-p="ttMusic"'+(P.ttMusic?" checked":"")+'>I accept TikTok\'s Music Usage Confirmation</label>':'')
+    :'<div class="m" style="margin-top:16px">TikTok is not connected. Use Connect TikTok above.</div>';
+  const D=P.draft;
+  const review=D?'<div class="card"><div class="sec">Review, then confirm</div><div class="t">'+esc(D.title)+'</div><div class="m" style="margin:4px 0 10px">'+fmtWhen(D.when)+'</div>'
+    +D.dests.map(x=>'<div class="row" style="margin-bottom:6px"><div class="grow">'+esc(NAMES[x.platform]||x.platform)+(x.reason?'<div class="m">'+esc(x.reason)+'</div>':'')+'</div><span class="chip '+(x.bad?"red":"ok")+'">'+esc(x.status||"checked")+'</span></div>').join("")
+    +(D.ready===false?'<div class="m" style="margin:8px 0">vidIQ refused something above. Fix it and press Check post again.</div>':'<div class="m" style="margin:8px 0">Nothing is posted yet. Press Confirm to schedule it.</div>')
+    +'<div class="acts"><button class="btn sm"'+(D.ready===false||P.busy?" disabled":"")+' data-pa="confirm">'+(P.busy==="confirm"?"Scheduling...":"Confirm and schedule")+'</button><button class="btn sm ghost" data-pa="canceldraft">Cancel</button></div></div>':'';
+  return '<div class="top"><div class="brand">Post</div><div class="date">Schedule uploads</div></div>'
+  +'<div class="card"><div class="sec">Accounts</div>'
+  +'<div class="row" style="margin-bottom:10px"><div class="grow"><div class="t">YouTube</div><div class="m">'+esc(A.yt?(A.yt.username||A.yt.displayName||""):"")+'</div></div>'+chip(A.yt)+'</div>'
+  +'<div class="row"><div class="grow"><div class="t">TikTok</div><div class="m">'+esc(A.tt?(A.tt.username||A.tt.displayName||""):A.ttAny?"Reconnect needed":"")+'</div></div>'+chip(A.tt)+'</div>'
+  +'<div class="acts">'+ytBtn+ttBtn+'<button class="btn sm ghost" data-pa="refresh">Refresh</button></div>'
+  +(A.err?'<div class="m" style="margin-top:8px;color:var(--amber)">'+esc(A.err)+'</div>':'')+'</div>'
+  +posts
+  +'<div class="card"><div class="sec">New scheduled post</div>'
+  +'<select id="pl" data-p="planId">'+planOpts+'</select>'
+  +'<label class="f" for="vu">1. Video link</label><div class="row"><input type="text" id="vu" data-p="url" value="'+esc(P.url)+'" placeholder="Public MP4 or MOV link, or an upload ID"><button class="btn sm" data-pa="import"'+(P.vstate==="run"?" disabled":"")+'>Import</button></div>'
+  +(P.vnote?'<div class="m" style="margin-top:6px"><span class="chip '+(P.vstate==="ok"?"ok":P.vstate==="fail"?"red":"warn")+'">'+esc(P.vnote)+'</span></div>':'<div class="m" style="margin-top:6px">MP4 or MOV, up to 299 MB.</div>')
+  +'<details class="box" style="margin-top:10px;white-space:normal"><summary style="cursor:pointer;font-weight:700">How do I get a video link?</summary>'
+  +'<div class="m" style="margin-top:10px;line-height:1.6"><b style="color:var(--tx)">Option 1: Google Drive</b><br>1. Open the Google Drive app and tap + then Upload. Pick your video from your phone.<br>2. Tap the three dots next to the video, then Share.<br>3. Under General access choose <b>Anyone with the link</b>.<br>4. Tap Copy link, paste it above and press Import.<br><br><b style="color:var(--tx)">Option 2: Send it in the Claude chat</b><br>Open the chat, attach the video from your phone and ask Claude to import it. Claude gives you an upload ID. Paste that ID above and press Import.</div></details>'
+  +'<label class="f" for="pt">2. Title</label><input type="text" id="pt" data-p="title" value="'+esc(P.title)+'" placeholder="Under 100 characters">'
+  +'<label class="f" for="pd">Description</label><textarea id="pd" data-p="desc" rows="4">'+esc(P.desc)+'</textarea>'
+  +'<label class="f" for="pg">Tags (comma separated)</label><input type="text" id="pg" data-p="tags" value="'+esc(P.tags)+'">'
+  +'<div class="acts"><button class="btn sm ghost" data-pa="aifill"'+(P.busy==="ai"?" disabled":"")+'>'+(P.busy==="ai"?"Writing...":"Fill description and tags with AI")+'</button></div>'
+  +'<label class="f" for="pw">3. When to post (your time)</label><input type="datetime-local" id="pw" data-p="when" value="'+esc(P.when)+'">'
+  +'<div style="margin-top:14px">'+yt+tt+'</div>'
+  +(P.msg?'<div class="m" style="margin-top:12px;color:var(--amber)">'+esc(P.msg)+'</div>':'')
+  +'<div style="margin-top:16px"><button class="btn"'+(P.busy?" disabled":"")+' data-pa="check">'+(P.busy==="check"?"Checking...":"Check post")+'</button></div>'
+  +'<div class="m" style="margin-top:10px">Checking costs nothing and posts nothing. YouTube also has an AI-use setting you may need to turn on in Studio if the visuals look real but are synthetic.</div></div>'
+  +review
+  +'<div class="card"><div class="sec">Track uploads you posted yourself</div><div class="m" style="margin-bottom:10px">Scheduled posts are tracked for free. For videos you uploaded by hand, this reads your channel and marks those days done (5 vidIQ credits).</div><button class="btn sm ghost" data-pa="channel">Check my channel</button></div>';
+}
+async function connectTikTok(){
+  if(!mcp){toast("vidIQ is not available in this view");return}
+  try{
+    const p=await vp("vidiq_social_account_connect",{platform:"TIKTOK"});
+    let link="";walk(p,(k,v)=>{if(!link&&typeof v==="string"&&/^https:\/\//.test(v)&&/auth|connect|oauth|login/i.test(k+v))link=v});
+    UI.acc.link=link;
+    if(!link)UI.acc.err="vidIQ did not return a sign-in link. Connect TikTok in vidIQ, then press Refresh.";
+  }catch(e){UI.acc.err=emsg(e)}
+  rr();
+}
+async function connectYouTube(){
+  if(!mcp){toast("vidIQ is not available in this view");return}
+  toast("Getting your YouTube sign-in link...");
+  try{
+    const p=await vp("vidiq_social_account_connect",{platform:"YOUTUBE"});
+    let link="",any="";walk(p,(k,v)=>{if(typeof v==="string"&&/^https:\/\//.test(v)){if(!any)any=v;if(!link&&/auth|connect|oauth|login|google|accounts/i.test(k+v))link=v}});
+    link=link||any;
+    UI.acc.ytLink=link;
+    let raw="";try{raw=typeof p==="string"?p:JSON.stringify(p)}catch(e){}
+    UI.acc.err=link?"":"vidIQ did not give a sign-in link. It said: "+String(raw||"nothing").slice(0,220);
+    UI.acc.ytFail=!link;
+  }catch(e){UI.acc.err="YouTube connect failed: "+emsg(e)+(e&&e.code?" ("+e.code+")":"");UI.acc.ytFail=true}
+  rr();
+}
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&UI.acc.ytLink&&!UI.acc.yt)loadAccounts()});
+async function importVideo(){
+  const P=UI.post,src=(P.url||"").trim();
+  if(!src){toast("Paste a video link first");return}
+  if(!mcp){toast("vidIQ is not available in this view");return}
+  P.vstate="run";P.vnote="Importing. This can take a minute.";P.uploadId="";rr();
+  try{
+    const isId=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(src);
+    let p=await vp("vidiq_video_upload",isId?{uploadId:src}:{url:src,title:((P.title||"Rune Clips video")).slice(0,255)});
+    const id=isId?src:deepFind(p,/^uploadId$/i);
+    if(!id)throw new Error("vidIQ did not return an upload ID. Check the link is public.");
+    for(let i=0;i<30;i++){
+      const stt=String(deepFind(p,/^status$/i)||"").toLowerCase();
+      if(/fail|error/.test(stt))throw new Error("The import failed. Check the link is public and under 299 MB.");
+      if(/ready|complete|done|success/.test(stt)||(!stt&&deepFind(p,/^videoUrl$/i)))break;
+      if(i===29)throw new Error("Still processing. Press Import again in a minute.");
+      await new Promise(r=>setTimeout(r,3000));
+      p=await vp("vidiq_video_upload",{uploadId:id});
+    }
+    P.uploadId=id;P.vstate="ok";P.vnote="Video ready";
+  }catch(e){P.vstate="fail";P.vnote=emsg(e)}
+  rr();
+}
+async function aiFill(){
+  const P=UI.post;
+  if(!sample){toast("The AI writer is not available in this view");return}
+  if(!P.title.trim()){toast("Type a title first");return}
+  P.busy="ai";rr();
+  try{
+    const out=await sample.json('Write publishing text for a short vertical video titled "'+P.title.trim()+'" on a channel about: '+S.niche+'. Return ONLY JSON: {"description":"two plain sentences naming the topic, then one question that invites a specific comment, then a new line with 4 relevant hashtags","tags":["15 lowercase tags, under 480 characters total"]}. Do not invent facts.',{modelTier:"quick",cache:false});
+    if(out&&out.description)P.desc=String(out.description);
+    if(out&&Array.isArray(out.tags))P.tags=out.tags.map(t=>String(t).trim()).filter(Boolean).join(", ");
+  }catch(e){toast(e&&e.code==="not_granted"?"The AI writer needs your permission":"Could not write right now")}
+  P.busy="";rr();
+}
+async function checkPost(){
+  const P=UI.post,A=UI.acc;
+  const fail=m=>{P.msg=m;P.busy="";rr()};
+  P.msg="";
+  if(!mcp)return fail("vidIQ is not available in this view.");
+  if(!P.uploadId)return fail("Import your video first (step 1).");
+  const title=P.title.trim();
+  if(!title)return fail("Add a title.");
+  if(title.length>100||/[<>]/.test(title))return fail("The title must be under 100 characters and cannot contain < or >.");
+  const when=new Date(P.when);
+  if(isNaN(when)||when.getTime()<Date.now()+5*60000)return fail("Pick a time at least 5 minutes from now.");
+  const dests=[];
+  if(P.ytOn&&A.yt){
+    if(!P.ytPriv)return fail("Choose who can watch on YouTube.");
+    const tags=P.tags.split(",").map(x=>x.trim().replace(/[<>]/g,"")).filter(Boolean).slice(0,30);
+    const d={platform:"YOUTUBE",platformAccountId:A.yt.platformAccountId,title,privacyStatus:P.ytPriv};
+    if(tags.length)d.tags=tags;
+    dests.push(d);
+  }
+  if(P.ttOn&&A.tt){
+    if(!P.ttPriv||!P.ttComment||!P.ttAi)return fail("Answer every TikTok question.");
+    if(!P.ttMusic)return fail("Confirm TikTok's music usage to post there.");
+    dests.push({platform:"TIKTOK",platformAccountId:A.tt.platformAccountId,privacyLevel:P.ttPriv,allowComment:P.ttComment==="yes",isAiGenerated:P.ttAi==="yes",musicUsageConfirmed:true});
+  }
+  if(!dests.length)return fail("Pick at least one place to post.");
+  P.busy="check";P.draft=null;rr();
+  try{
+    const input={destinations:dests,media:[{type:"video",id:P.uploadId}],publishAt:when.toISOString()};
+    if(P.desc.trim())input.text=P.desc.trim();
+    const p=await vp("vidiq_social_post_draft_create",input);
+    const postId=deepFind(p,/^postId$/i),revision=deepFind(p,/^revision$/i);
+    if(!postId||!revision)throw new Error("vidIQ did not return a draft. Try again.");
+    const arr=(p&&Array.isArray(p.destinations))?p.destinations:[];
+    const rows=arr.length?arr.map(x=>{
+      const st=String(x.status||"checked"),why=x.reason||x.error||x.message||(Array.isArray(x.errors)?x.errors.join(", "):"")||"";
+      return {platform:x.platform||"",status:st,reason:typeof why==="string"?why:JSON.stringify(why).slice(0,160),bad:/refus|fail|invalid|error/i.test(st)};
+    }):dests.map(d=>({platform:d.platform,status:"checked",reason:"",bad:false}));
+    const ready=(p&&typeof p.ready==="boolean")?p.ready:null;
+    P.draft={postId,revision,ready,dests:rows,when:when.toISOString(),title,names:dests.map(d=>d.platform)};
+  }catch(e){P.msg=emsg(e)}
+  P.busy="";rr();
+}
+async function confirmPost(){
+  const P=UI.post,D=P.draft;
+  if(!D||!D.postId||!D.revision){toast("Check the post first");return}
+  P.busy="confirm";rr();
+  try{
+    await vp("vidiq_social_post_publish",{postId:D.postId,revision:D.revision});
+    S.posts.unshift({id:D.postId,title:D.title,publishAt:D.when,names:D.names,planId:P.planId||"",status:"scheduled",link:"",note:""});
+    save();
+    UI.post=newPost();
+    toast("Scheduled. vidIQ will post it at your time.");
+    render(true);
+    syncPosts(true);
+  }catch(e){P.msg=emsg(e);P.busy="";rr()}
+}
+async function syncPosts(silent){
+  if(!mcp)return;
+  await dbReady;
+  const pend=S.posts.filter(p=>p.status==="scheduled");
+  let ch=false;
+  for(const po of pend){
+    try{
+      const p=await vp("vidiq_social_post_status",{postId:po.id});
+      const st=new Set();walk(p,(k,v)=>{if(/status/i.test(k)&&typeof v==="string")st.add(v.toLowerCase())});
+      po.note=[...st].join(", ");
+      const waiting=["scheduled","submitted","inprogress","draft"].some(s=>st.has(s));
+      const due=new Date(po.publishAt)<=new Date();
+      if(st.has("failed")&&!waiting){po.status="failed";ch=true}
+      else if(st.has("cancelled")&&!waiting){po.status="cancelled";ch=true}
+      else if(st.has("completed")&&!waiting&&due){
+        po.status="live";ch=true;
+        let link="";walk(p,(k,v)=>{if(!link&&typeof v==="string"&&/^https?:\/\/(www\.)?(youtube\.com|youtu\.be|tiktok\.com)/.test(v))link=v});
+        po.link=link;
+        const day=ymd(new Date(po.publishAt));
+        S.log[day]="done";
+        const v=po.planId&&vid(po.planId);
+        if(v&&v.stage<3){v.stage=3;v.uploadedAt=day}
+      }
+    }catch(e){}
+  }
+  if(ch){save();toast("Upload marked done from vidIQ");if(UI.tab!=="writer")render(true)}
+  else if(!silent)toast(pend.length?"Nothing new yet":"No scheduled posts")
+}
+async function checkChannel(){
+  if(!mcp||!UI.acc.yt){toast("YouTube is not connected");return}
+  toast("Checking your channel...");
+  try{
+    const p=await vp("vidiq_user_videos",{channelId:UI.acc.yt.platformAccountId,limit:15,order:"newest",privacyStatus:["public"]});
+    const cut=Date.now()-60*864e5,now=new Date();let n=0;
+    walk(p,(k,v)=>{if(/publish/i.test(k)&&typeof v==="string"){const d=new Date(v);if(!isNaN(d)&&d<=now&&d.getTime()>cut){const day=ymd(d);if(S.log[day]!=="done"){S.log[day]="done";n++}}}});
+    if(n)save();
+    toast(n?n+" upload day"+(n>1?"s":"")+" marked done":"Already up to date");
+    if(n)render(true);
+  }catch(e){toast(emsg(e))}
+}
+function postAction(d){
+  const a=d.pa;
+  if(a==="refresh")loadAccounts();
+  else if(a==="ttconnect")connectTikTok();
+  else if(a==="ytconnect")connectYouTube();
+  else if(a==="import")importVideo();
+  else if(a==="aifill")aiFill();
+  else if(a==="check")checkPost();
+  else if(a==="confirm")confirmPost();
+  else if(a==="canceldraft"){UI.post.draft=null;render(true)}
+  else if(a==="sync")syncPosts(false);
+  else if(a==="channel")checkChannel();
+  else if(a==="delpost"){S.posts.splice(+d.i,1);save();render(true)}
+}
+
+/* ---------- Ask: chat assistant that knows YouTube and this app ---------- */
+UI.ask={busy:false,partial:"",tools:[],vcalls:0,err:""};UI.askDraft="";
+const SUGGEST=["Why are my views low?","What should I post tomorrow?","How do I get monetized?","Is my upload streak good?","Give me 5 video ideas"];
+const md=t=>esc(t).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/\n/g,"<br>");
+const bubble=m=>'<div class="bub '+(m.role==="user"?"u":"a")+'">'+md(m.content)+'</div>';
+const toolsLine=()=>UI.ask.tools.length?"Checking: "+UI.ask.tools.join(", ")+(UI.ask.vcalls?" (about "+UI.ask.vcalls*5+" vidIQ credits)":""):"";
+function askScroll(){setTimeout(()=>window.scrollTo(0,document.body.scrollHeight),30)}
+function viewAsk(){
+  const A=UI.ask;
+  const SP='<svg viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16v4M17 18h4"/></svg>';
+  const head='<div class="cg-top"><div class="cg-title">'+SP.replace('<svg','<svg style="width:20px;height:20px;stroke:var(--red);fill:none;stroke-width:2"')+'AI</div>'
+    +(S.chat.length&&!A.busy?'<button class="cg-new" data-ask="clear"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>New chat</button>':'')+'</div>';
+  const empty=!S.chat.length&&!A.busy?'<div class="cg-empty"><div class="cg-logo">'+SP+'</div><h2>What can I help with?</h2><div class="cg-sug">'
+    +SUGGEST.slice(0,4).map(q=>'<button data-ask="send" data-q="'+esc(q)+'">'+esc(q)+'</button>').join("")+'</div></div>':"";
+  const CP='<svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>';
+  const msgs=S.chat.map((m,i)=>m.role==="user"
+    ?'<div class="cg-row u"><div class="cg-u">'+md(m.content)+'</div></div>'
+    :'<div class="cg-row"><div class="cg-av">'+SP+'</div><div class="cg-a">'+md(m.content)+'<div class="cg-act"><button data-ask="copy" data-i="'+i+'" aria-label="Copy">'+CP+'</button></div></div></div>').join("");
+  const live=A.busy?'<div class="cg-row"><div class="cg-av">'+SP+'</div><div class="cg-a" id="askLive">'+(A.partial?md(A.partial):'<span class="cg-dots"><i></i><i></i><i></i></span>')+'<div class="m" id="askTools" style="margin-top:4px">'+esc(toolsLine())+'</div></div></div>':"";
+  const err=A.err?'<div class="m" style="color:var(--amber);margin:8px 0">'+esc(A.err)+'</div>':'';
+  const bar='<div class="cg-bar"><div style="width:100%;max-width:496px"><div class="cg-in"><textarea id="q" rows="1" placeholder="Message AI">'+esc(UI.askDraft)+'</textarea>'
+    +'<button class="cg-send" data-ask="send" aria-label="Send"'+(A.busy?" disabled":"")+'><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></div>'
+    +'<div class="cg-note">AI can make mistakes. Check important facts.</div></div></div>';
+  return head+(getKey()?"":keyCard())+empty+msgs+live+err+'<div style="height:96px"></div>'+bar;
+}
+function askAction(d){
+  if(d.ask==="send"){const q=d.q||($("q")?$("q").value:"");sendAsk(q)}
+  else if(d.ask==="clear"){S.chat=[];save();render(true)}
+  else if(d.ask==="copy"){const m=S.chat[+d.i];if(m)copy(m.content)}
+}
+function appState(){
+  const t=today(),ds=doneDates();
+  const last14=Array.from({length:14},(_,i)=>{const d=addDays(t,i-13),k=ymd(d);return {date:k,status:S.log[k]||"none"}});
+  return {today:ymd(t),goalEveryDays:S.interval,currentStreak:streak(),bestStreak:bestStreak(),daysUploadedTotal:ds.length,last14Days:last14,
+    plan:S.videos.slice(0,15).map(v=>({title:v.title,stage:STAGES[v.stage],checklistDone:readyCount(v)+" of "+CHECKS.length,result:v.result.label||undefined})),
+    scheduledPosts:S.posts.slice(0,8).map(p=>({title:p.title,time:p.publishAt,status:p.status,where:p.names})),
+    monetization:S.money,niche:S.niche,youtubeConnected:!!UI.acc.yt,tiktokConnected:!!UI.acc.tt};
+}
+function askPreamble(){
+return 'You are the helper inside "Rune Clips Studio", an app for a new faceless Shorts channel (@runeclipsofficial). Channel niche: '+S.niche+'. Today is '+ymd(today())+'.\n'
++'The creator is not a native English speaker: use short, simple sentences and plain words. Keep answers under 150 words unless asked for more. Use short lines, and **bold** only for key words. No tables. Answer in the language the creator writes in.\n'
++'You can answer questions about YouTube (Shorts, growth, titles, tags, hooks, scripts, analytics, monetization, policies, copyright) and about how this app works. Be honest. If you are not sure, or a rule may have changed, say so and tell them to check YouTube Help or YouTube Studio. Never invent numbers. Separate official YouTube rules from creator opinion.\n'
++'TOOLS: use get_app_state for questions about their streak, plan or settings. Use the vidIQ tools only when live YouTube data is needed. Each costs 5 credits and you may use at most 3 per answer. Use add_to_plan only when the creator asks to add something. You cannot post, schedule, delete or change anything else.\n'
++'APP TABS: Today (streak ring, "I uploaded today" button, rest day), Writer (AI titles, tags, hook from vidIQ data), Plan (ideas, script notes, fact check, pre-upload checklist, results), AI (this chat), Stats (streak stats, monetization progress, settings). Scheduled posts go out by themselves on vidIQ servers; the app marks the day done when it is opened after posting. The app cannot send reminders when closed.\n'
++'KNOWLEDGE (researched 22 Nov 2026, may change):\n'
++'OFFICIAL: Full YouTube Partner Program needs 1,000 subscribers plus either 4,000 public long-form watch hours in 12 months or 10 million Shorts views in 90 days. Shorts-feed watch time does not count toward the 4,000 hours. Shorts ad revenue needs the Shorts Monetization Module accepted in Studio. New Partner Program terms start 1 Feb 2027; accept them in Studio by 31 Jan 2027. A lower early-access tier exists but its numbers were not verified: tell them to check the Earn tab.\n'
++'OFFICIAL: "Inauthentic content" policy targets mass-produced, template-like videos. Reused content needs real added value. AI that visualizes your own original script is allowed; generic stitched AI clips with no story are not. Realistic altered or synthetic content must be disclosed in the upload settings (AI use). Clearly animated or unrealistic content does not need it. Repeated non-disclosure can lead to penalties.\n'
++'OFFICIAL: Shorts can be up to 3 minutes (since 15 Oct 2024). A Shorts view counts on every start or replay (since 31 Mar 2025); "engaged views" is used for monetization eligibility. Use YouTube Audio Library or licensed music; claimed music can block or limit a video.\n'
++'OFFICIAL: YouTube has not published how Shorts are ranked. A Short is shown to a small test group first; viewer response decides reach. Posting time and daily frequency are not officially optimized. Hashtags are optional. Titles can be up to 100 characters.\n'
++'CREATOR OPINION (say so): the first 3 seconds decide swipe-away; on-screen text helps; loops help replays; about 130 to 155 words fit a 60-second narration; viewed-not-swiped above 70% is working and above 80% strong; titles of about 20 to 55 characters are common. A vidIQ study of 367,000 new channels found more uploads gives more chances for one outlier but does not make each video better. Fact-check every claim in true-story videos and keep sources.\n'
++'If asked something you cannot know (their private analytics), say what to check in YouTube Studio instead of guessing.';
+}
+function askTools(){
+  const guard=async(label,fn)=>{
+    if(!mcp)throw new Error("vidIQ is not available in this view.");
+    if(UI.ask.vcalls>=3)throw new Error("Credit limit for this answer is reached. Answer with what you already have.");
+    UI.ask.vcalls++;UI.ask.tools.push(label);const e=$("askTools");if(e)e.textContent=toolsLine();
+    return clip(await fn(),6000);
+  };
+  const str={type:"string"};
+  return [
+    {name:"get_app_state",description:"Get the creator's streak, last 14 days, Plan videos, scheduled posts and settings from this app. Free.",inputSchema:{type:"object",properties:{}},execute:async()=>JSON.stringify(appState())},
+    {name:"add_to_plan",description:"Add a video idea to the Plan tab. Use only when the creator asks you to add it.",inputSchema:{type:"object",properties:{title:str},required:["title"]},execute:async i=>{addVideo(String(i.title||"").slice(0,100));UI.ask.tools.push("added to Plan");return "Added to Plan."}},
+    {name:"keyword_research",description:"vidIQ YouTube keyword research: search volume, competition, related keywords or question searches. Costs 5 credits.",inputSchema:{type:"object",properties:{keyword:str,mode:{type:"string",enum:["research","questions"]}},required:["keyword"]},execute:i=>guard("keyword research",()=>vp("vidiq_keyword_research",{keyword:String(i.keyword).slice(0,150),mode:i.mode==="questions"?"questions":"research",limit:12}))},
+    {name:"viral_shorts",description:"vidIQ: Shorts on a topic that overperformed in the last 3 months, with breakout scores. Costs 5 credits.",inputSchema:{type:"object",properties:{keyword:str},required:["keyword"]},execute:i=>guard("viral Shorts",()=>vp("vidiq_outliers",{keyword:String(i.keyword).slice(0,200),contentType:"short",publishedWithin:"threeMonths",limit:8,sort:"breakoutScore"}))},
+    {name:"trending_shorts",description:"vidIQ: Shorts gaining views fastest right now on a topic. Costs 5 credits.",inputSchema:{type:"object",properties:{topic:str},required:["topic"]},execute:i=>guard("trending Shorts",()=>vp("vidiq_trending_videos",{videoFormat:"short",titleQuery:String(i.topic).slice(0,200),sortBy:"recentVph",limit:8,videoTitleLanguage:"en"}))},
+    {name:"channel_top_shorts",description:"vidIQ: a channel's most popular Shorts. Give an @handle. Costs 5 credits.",inputSchema:{type:"object",properties:{handle:str},required:["handle"]},execute:i=>guard("channel Shorts",()=>vp("vidiq_channel_videos",{channelId:String(i.handle).slice(0,100),videoFormat:"short",popular:true}))},
+    {name:"my_channel_videos",description:"vidIQ: the creator's own latest videos on their connected YouTube channel with views. Costs 5 credits.",inputSchema:{type:"object",properties:{}},execute:()=>guard("your channel",()=>{if(!UI.acc.yt)throw new Error("YouTube is not connected.");return vp("vidiq_user_videos",{channelId:UI.acc.yt.platformAccountId,limit:10,order:"newest"})})},
+    {name:"score_title",description:"vidIQ: score a Shorts title for click potential, 0 to 100. Costs 5 credits.",inputSchema:{type:"object",properties:{title:str},required:["title"]},execute:i=>guard("title score",()=>vp("vidiq_score_title",{title:String(i.title).slice(0,100),type:"short"}))}
+  ];
+}
+async function sendAsk(text){
+  text=(text||"").trim();
+  const A=UI.ask;
+  if(!text||A.busy)return;
+  if(!sample){A.err="The AI helper is not available in this view. Open the app in Claude.";render(true);return}
+  S.chat.push({role:"user",content:text});S.chat=S.chat.slice(-30);
+  UI.askDraft="";A.busy=true;A.partial="";A.tools=[];A.vcalls=0;A.err="";
+  render(true);askScroll();
+  try{
+    let hist=S.chat.slice(-14);
+    while(hist.length&&hist[0].role!=="user")hist.shift();
+    const input=hist.map((m,i)=>({role:m.role,content:(i===0?askPreamble()+"\n\nCONVERSATION STARTS:\n":"")+m.content}));
+    const r=await sample(input,{modelTier:"default",cache:false,tools:askTools().filter(t=>mcp||/^(get_app_state|add_to_plan)$/.test(t.name)),onText:({text})=>{A.partial=text;const e=$("askLive");if(e){e.innerHTML=md(text)+'<div class="m" id="askTools" style="margin-top:6px">'+esc(toolsLine())+'</div>'}}});
+    const ans=(r&&r.text||A.partial||"").trim();
+    S.chat.push({role:"assistant",content:ans?ans+(r&&r.truncated?"\n(The answer was cut short. Ask me to continue.)":""):"I could not write an answer. Try again."});
+  }catch(e){
+    A.err=e&&(e.code==="no_key"||e.code==="bad_key"||e.code==="offline")?e.message:e&&e.code==="not_granted"?"The helper needs your permission. Send your question again and allow it.":e&&e.code==="rate_limited"?"Too many requests. Wait a minute and try again.":"I could not answer right now. Try again.";
+  }
+  A.busy=false;save();
+  if(UI.tab==="ask"){render(true);askScroll()}
+}
+
+/* start */
+(function init(){
+  const l=lsGet();if(l)S=Object.assign(S,l);
+  normalize();
+  render();
+  sample=sampleFn;dbResolve();
+  if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+})();
+</script>
+</body>
+</html>
